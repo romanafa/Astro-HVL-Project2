@@ -3,7 +3,7 @@
 <br/>
 <br/>
 
-## About project
+## 🚀 About project
 Coming soon!
 <br/>
 <br/>
