@@ -2,17 +2,22 @@
 ### 🛠️ This README is under construction 🛠️
 <br/>
 <br/>
+
 ## About project
 Coming soon!
 <br/>
 <br/>
+
 ## Dashboard code overview
 <br/>
 <br/>
+
 ## Avionics code overview
 <br/>
 <br/>
+
 ## Sensors
 <br/>
 <br/>
+
 ## Other
