@@ -16,7 +16,11 @@ Coming soon!
 <br/>
 <br/>
 
-## Sensors
+## Hardware
+<br/>
+<br/>
+
+## Testing
 <br/>
 <br/>
 
