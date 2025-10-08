@@ -1,0 +1,64 @@
+html, body {
+    background: #000;
+    color: #fff;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #fff;
+}
+
+#charts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+}
+
+.chart-container {
+    flex: 1 1 calc(33.333% - 16px);
+    max-width: 33.333%;
+    min-width: 300px;
+    box-sizing: border-box;
+    background: #111;
+    border: 1.5px solid #222;
+    color: #fff;
+}
+
+.chart-container canvas {
+    width: 100% !important;
+    height: auto !important;
+    background: #111;
+    border: 1px solid #222;
+}
+
+#statusPanel {
+    margin: 24px 0 0 0;
+    padding: 16px;
+    border: 1.5px solid #222;
+    background: #111;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+
+    text-align: left;
+    color: #fff;
+    box-sizing: border-box;
+}
+
+table, th, td {
+    color: #fff;
+    border-color: #333;
+}
+
+thead, th {
+    background: #111;
+    color: #fff;
+}
+
+@keyframes blinkBackground {
+  0%   { background-color: #a00; }
+  50%  { background-color: #000; }
+  100% { background-color: #a00; }
+}
+
+.blink-red {
+  animation: blinkBackground 1s infinite;
+}

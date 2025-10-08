@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="style.css">
+  <title>Telemetry Dashboard</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.min.js"></script>
+  <script src="rocket3d.js"></script>
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; margin: 16px; background: #000; color: #fff; }
+    #charts { display:flex; gap:16px; flex-wrap:wrap; }
+    canvas { background:#111; border:1px solid #222 ; }
+    #statusPanel { margin:12px 0; padding:8px; border:1px solid #222 ; background:#111; max-width:1200px; color: #fff; }
+    table td { padding:4px 8px; color: #fff; background: #111; }
+    #debug { height:140px; overflow:auto; border:1px solid #222; padding:8px; white-space:pre-wrap; background:#111; color: #fff;}
+  </style>
+</head>
+<body>
+
+  <div style="display: flex; justify-content: center; align-items: center; position: relative;">
+    <h1 style="flex:1; text-align:left; margin:0;">Test dashboard</h1>
+    <div id="timerDisplay" style="flex:1; text-align:center; font-size:2.2rem; font-family:monospace; font-weight:bold; color:#fff; letter-spacing:2px;">
+      <span style="font-family:inherit; font-size:2rem; font-weight:normal; letter-spacing:normal;">Flight time: </span><span id="timerValue"></span>
+    </div>
+    <div style="flex:1;"></div>
+  </div>
+  <br>
+
+<div style="display:flex; gap:16px; margin-bottom:16px;">
+  <div style="flex:1; min-width:180px; background:#111; color:#fff; border:2px solid #444; border-radius:6px; padding:8px;">
+    <div style="font-weight:bold; font-size:18px;">PITCH</div>
+    <div id="pitchValue" style="font-size:24px; margin-bottom:4px;">0.00 &deg;</div>
+    <canvas id="pitchViz" width="160" height="120" style="background:#222; display:block; margin:auto;"></canvas>
+  </div>
+  <div style="flex:1; min-width:180px; background:#111; color:#fff; border:2px solid #444; border-radius:6px; padding:8px;">
+    <div style="font-weight:bold; font-size:18px;">YAW</div>
+    <div id="yawValue" style="font-size:24px; margin-bottom:4px;">0.00 &deg;</div>
+    <canvas id="yawViz" width="160" height="120" style="background:#222; display:block; margin:auto;"></canvas>
+  </div>
+  <div style="flex:1; min-width:180px; background:#111; color:#fff; border:2px solid #444; border-radius:6px; padding:8px;">
+    <div style="font-weight:bold; font-size:18px;">ROLL</div>
+    <div id="rollValue" style="font-size:24px; margin-bottom:4px;">0.00 &deg;</div>
+    <canvas id="rollViz" width="160" height="120" style="background:#222; display:block; margin:auto;"></canvas>
+  </div>
+</div>
+<div id="charts">
+
+  <div class="chart-container" style="min-width:320px; min-height:220px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+    <div id="rocket3dContainer"
+         style="
+           width: 32vw;
+           height: 28vh;
+           max-width: 540px;
+           max-height: 420px;
+           min-width: 320px;
+           min-height: 220px;
+           background:#111;
+           border:1.5px solid #222;
+           border-radius:8px;">
+    </div>
+    <div style="text-align:center; color:#fff; font-size:1.1rem; margin-top:6px;">3D Orientation</div>
+  </div>
+  <div class="chart-container">
+    <canvas id="velChart" width="480" height="380"></canvas>
+    <div style="text-align:center;"></div>
+  </div>
+
+  <div class="chart-container">
+    <canvas id="altChart" width="480" height="380"></canvas>
+    <div style="text-align:center;"></div>
+  </div>
+
+  
+  <div class="chart-container">
+    <canvas id="tempChart" width="480" height="380"></canvas>
+    <div style="text-align:center;"></div>
+  </div>
+  <div class="chart-container">
+    <canvas id="pressChart" width="480" height="380"></canvas>
+    <div style="text-align:center;"></div>
+  </div>
+
+  <div class="chart-container">
+    <canvas id="accChart" width="480" height="380"></canvas>
+    <div style="text-align:center;"></div>
+  </div>
+
+  <div class="chart-container">
+    <canvas id="orientChart" width="480" height="380"></canvas>
+    <div style="text-align:center;"></div>
+  </div>
+</div>
+
+<br><br><br><br>
+  <div id="statusPanel">
+    <strong>Latest telemetry</strong>
+    <table id="latestTable" style="width:100%; font-family:monospace; margin-top:6px;">
+      <tr><td>Time (s)</td><td id="val_time">-</td><td>Seq</td><td id="val_seq">-</td></tr>
+      <tr><td>ax (g)</td><td id="val_ax">-</td><td>Pitch</td><td id="val_pitch">-</td></tr>
+      <tr><td>ay (g)</td><td id="val_ay">-</td><td>Roll</td><td id="val_roll">-</td></tr>
+      <tr><td>az (g)</td><td id="val_az">-</td><td>Yaw</td><td id="val_yaw">-</td></tr>
+      <tr><td>Temp (°C)</td><td id="val_temp">-</td><td>Vel (m/s)</td><td id="val_vel">-</td></tr>
+      <tr><td>Press</td><td id="val_press">-</td><td>Alt (m)</td><td id="val_alt">-</td></tr>
+      <tr><td>Lat</td><td id="val_lat">-</td><td>Lon</td><td id="val_lon">-</td></tr>
+    </table>
+  </div>
+  
+  <h3>Debug (raw)</h3>
+  <div id="debug"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
